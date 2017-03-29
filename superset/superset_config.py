@@ -1,9 +1,10 @@
 import os
+from werkzeug.contrib.cache import RedisCache
 
 #---------------------------------------------------------
 # Superset specific config
 #---------------------------------------------------------
-ROW_LIMIT = 5000
+ROW_LIMIT = 15000
 SUPERSET_WORKERS = int(os.getenv('WORKERS', '2'))
 SUPERSET_CELERY_WORKERS = int(os.getenv('CELERY_WORKERS', '32'))
 
@@ -14,14 +15,15 @@ SUPERSET_WEBSERVER_PORT = 8088
 # Flask App Builder configuration
 #---------------------------------------------------------
 # Your App secret key
-SECRET_KEY = os.getenv('SECRET_KEY', 'thisISaSECRET_1234')
+SECRET_KEY = os.getenv('SECRET_KEY', 'BzbMpmskLAwDtrb9rzdxoLmp')
 
 redis_host = os.getenv('REDIS_HOST', 'redis')
 redis_port = int(os.getenv('REDIS_PORT', '6379'))
 redis_db = int(os.getenv('REDIS_DB', '0'))
+cache_default_timeout = 300
 CACHE_CONFIG = {
     'CACHE_TYPE': 'redis',
-    'CACHE_DEFAULT_TIMEOUT': 300,
+    'CACHE_DEFAULT_TIMEOUT': cache_default_timeout,
     'CACHE_KEY_PREFIX': 'superset_',
     'CACHE_REDIS_HOST': redis_host,
     'CACHE_REDIS_PORT': redis_port,
@@ -52,6 +54,7 @@ class CeleryConfig(object):
   CELERY_ANNOTATIONS = {'tasks.add': {'rate_limit': '10/s'}}
 CELERY_CONFIG = CeleryConfig
 
+RESULTS_BACKEND = RedisCache(host=celery_result_backend_redis_host, port=celery_result_backend_redis_port, password=None, db=celery_result_backend_redis_db, default_timeout=cache_default_timeout)
 
 # Flask-WTF flag for CSRF
 CSRF_ENABLED = True

@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:2.7
 
 # Install
 ENV SUPERSET_VERSION 0.17.1
@@ -18,7 +18,8 @@ RUN pip --no-cache-dir install superset==${SUPERSET_VERSION} \
     sqlalchemy-redshift \
     redis \
     celery \
-    "celery[redis]"
+    "celery[redis]" \
+    Werkzeug
 
 # Default config
 ENV LANG=C.UTF-8 \
@@ -31,9 +32,10 @@ WORKDIR /home/superset
 COPY superset .
 RUN groupadd -r superset && \
     useradd -r -m -g superset superset && \
-    mkdir -p /home/superset/db /var/log/supervisor && \
+    mkdir -p /home/superset/db /var/log/supervisor /var/run/supervisor && \
     chown -R superset:superset /home/superset && \
-    chown -R superset:superset /var/log/supervisor
+    chown -R superset:superset /var/log/supervisor && \
+    chown -R superset:superset /var/run/supervisor
 
 USER superset
 

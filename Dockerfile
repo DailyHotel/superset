@@ -1,20 +1,24 @@
-FROM amancevice/pandas:0.18.1-python3
+FROM python:3.6
 
 # Install
 ENV SUPERSET_VERSION 0.17.1
-RUN apk add --no-cache \
-        curl \
-        libffi-dev \
-        cyrus-sasl-dev \
-        mariadb-dev \
-        postgresql-dev && \
-    pip3 install \
-        superset==$SUPERSET_VERSION \
-        mysqlclient==1.3.7 \
-        ldap3==2.1.1 \
-        psycopg2==2.6.1 \
-        redis==2.10.5 \
-        sqlalchemy-redshift==0.5.0
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python-dev \
+    libsasl2-dev \
+    libldap2-dev \
+    supervisor \
+    && apt-get clean -y
+
+RUN pip --no-cache-dir install superset==${SUPERSET_VERSION} \
+    mysqlclient \
+    sqlalchemy-redshift \
+    redis \
+    celery \
+    "celery[redis]"
 
 # Default config
 ENV LANG=C.UTF-8 \
@@ -25,13 +29,17 @@ ENV LANG=C.UTF-8 \
 # Run as superset user
 WORKDIR /home/superset
 COPY superset .
-RUN addgroup superset && \
-    adduser -h /home/superset -G superset -D superset && \
-    chown -R superset:superset /home/superset
+RUN groupadd -r superset && \
+    useradd -r -m -g superset superset && \
+    mkdir -p /home/superset/db /var/log/supervisor && \
+    chown -R superset:superset /home/superset && \
+    chown -R superset:superset /var/log/supervisor
+
 USER superset
 
 # Deploy
 EXPOSE 8088
 HEALTHCHECK CMD ["curl", "-f", "http://localhost:8088/health"]
-ENTRYPOINT ["superset"]
-CMD ["runserver"]
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

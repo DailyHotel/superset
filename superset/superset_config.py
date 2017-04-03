@@ -62,7 +62,7 @@ CSRF_ENABLED = True
 # Set this API key to enable Mapbox visualizations
 MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY', '')
 
-DEBUG = True
+DEBUG = False
 
 
 # smtp server configuration

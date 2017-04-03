@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 from werkzeug.contrib.cache import RedisCache
 
@@ -62,7 +64,7 @@ CSRF_ENABLED = True
 # Set this API key to enable Mapbox visualizations
 MAPBOX_API_KEY = os.getenv('MAPBOX_API_KEY', '')
 
-DEBUG = False
+DEBUG = bool(os.getenv('SUPERSET_DEBUG', 'False'))
 
 
 # smtp server configuration

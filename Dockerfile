@@ -1,4 +1,4 @@
-FROM python:2.7
+FROM python:3.4
 
 # Install
 ENV SUPERSET_VERSION 0.17.1

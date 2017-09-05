@@ -1,7 +1,7 @@
 FROM python:3.4
 
 # Install
-ENV SUPERSET_VERSION 0.17.1
+ENV SUPERSET_VERSION 0.18.5
 
 RUN apt-get update && apt-get install -y \
     build-essential \

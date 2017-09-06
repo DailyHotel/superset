@@ -1,7 +1,7 @@
 FROM python:3.4
 
 # Install
-ENV SUPERSET_VERSION 0.18.5
+ENV SUPERSET_VERSION 0.19.1
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -19,7 +19,9 @@ RUN pip --no-cache-dir install superset==${SUPERSET_VERSION} \
     redis \
     celery \
     "celery[redis]" \
-    Werkzeug
+    Werkzeug \
+    flask-oauth \ 
+    flask_oauthlib
 
 # Default config
 ENV LANG=C.UTF-8 \

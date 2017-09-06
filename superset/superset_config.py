@@ -2,6 +2,7 @@
 
 import os
 from werkzeug.contrib.cache import RedisCache
+from flask_appbuilder.security.manager import AUTH_OID, AUTH_REMOTE_USER, AUTH_DB, AUTH_LDAP, AUTH_OAUTH
 
 #---------------------------------------------------------
 # Superset specific config
@@ -76,3 +77,46 @@ SMTP_USER = os.getenv('SMTP_USER', 'superset')
 SMTP_PORT = int(os.getenv('SMTP_PORT', '25'))
 SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', 'superset')
 SMTP_MAIL_FROM = os.getenv('SMTP_MAIL_FROM', 'superset@superset.com')
+
+
+#----------------------------------------------------
+# AUTHENTICATION CONFIG
+#----------------------------------------------------
+# The authentication type
+# AUTH_OID : Is for OpenID
+# AUTH_DB : Is for database (username/password()
+# AUTH_LDAP : Is for LDAP
+# AUTH_REMOTE_USER : Is for using REMOTE_USER from web server
+AUTH_TYPE = AUTH_OAUTH
+
+OAUTH_PROVIDERS = [
+    {'name': 'google', 'whitelist': ['@dailyhotel.com'], 'icon': 'fa-google', 'token_key': 'access_token',
+        'remote_app': {
+            'consumer_key': os.environ.get('GOOGLE_KEY'),
+            'consumer_secret': os.environ.get('GOOGLE_SECRET'),
+            'base_url': 'https://www.googleapis.com/oauth2/v2/',
+            'request_token_params': {
+              'scope': 'email profile'
+            },
+            'request_token_url': None,
+            'access_token_url': 'https://accounts.google.com/o/oauth2/token',
+            'authorize_url': 'https://accounts.google.com/o/oauth2/auth'}
+    }
+]
+
+# Uncomment to setup Full admin role name
+#AUTH_ROLE_ADMIN = 'Admin'
+
+# Uncomment to setup Public role name, no authentication needed
+#AUTH_ROLE_PUBLIC = 'Public'
+
+# Will allow user self registration
+AUTH_USER_REGISTRATION = True
+
+# The default user self registration role
+AUTH_USER_REGISTRATION_ROLE = "Public"
+
+# When using LDAP Auth, setup the ldap server
+#AUTH_LDAP_SERVER = "ldap://ldapserver.new"
+#AUTH_LDAP_USE_TLS = False
+

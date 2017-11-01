@@ -1,7 +1,10 @@
-FROM python:3.4
+FROM python:3.5
 
 # Install
 ENV SUPERSET_VERSION 0.19.1
+
+# Set the timezone to KST
+RUN cat /usr/share/zoneinfo/Asia/Seoul > /etc/localtime
 
 RUN apt-get update && apt-get install -y \
     build-essential \

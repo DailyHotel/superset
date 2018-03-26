@@ -1,15 +1,13 @@
-FROM python:3.5
+FROM python:3.6.4
 
 # Install
-ENV SUPERSET_VERSION 0.22.1
+ENV SUPERSET_VERSION 0.23.3
 
 # Set the timezone to KST
 RUN cat /usr/share/zoneinfo/Asia/Seoul > /etc/localtime
 
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libssl-dev \
-    libffi-dev \
     python-dev \
     libsasl2-dev \
     libldap2-dev \
@@ -23,7 +21,7 @@ RUN pip --no-cache-dir install superset==${SUPERSET_VERSION} \
     celery \
     "celery[redis]" \
     Werkzeug \
-    flask-oauth \ 
+    flask-oauth \
     flask_oauthlib
 
 # Default config
@@ -36,7 +34,7 @@ ENV LANG=C.UTF-8 \
 WORKDIR /home/superset
 COPY superset .
 RUN groupadd -r superset && \
-    useradd -r -m -g superset superset && \
+    useradd -r -M -g superset superset && \
     mkdir -p /home/superset/db /var/log/supervisor /var/run/supervisor && \
     chown -R superset:superset /home/superset && \
     chown -R superset:superset /var/log/supervisor && \

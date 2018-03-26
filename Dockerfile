@@ -22,7 +22,8 @@ RUN pip --no-cache-dir install superset==${SUPERSET_VERSION} \
     "celery[redis]" \
     Werkzeug \
     flask-oauth \
-    flask_oauthlib
+    flask_oauthlib \
+    psycopg2-binary
 
 # Default config
 ENV LANG=C.UTF-8 \

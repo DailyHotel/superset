@@ -1,7 +1,7 @@
 FROM python:3.6.4
 
 # Install
-ENV SUPERSET_VERSION 0.23.3
+ENV SUPERSET_VERSION 0.24.0
 
 # Set the timezone to KST
 RUN cat /usr/share/zoneinfo/Asia/Seoul > /etc/localtime
